@@ -1,4 +1,4 @@
-# Metal Sole Phase Structure
+# Robber Bounce
 
 ## Usage
 
@@ -6,7 +6,7 @@ You need [Node.js and npm](https://nodejs.org/). You should also have git instal
 
 Clone the repository (or download the ZIP file)
 
-`git clone https://github.com/MetalPhaser/MetalPhaserStub.git`
+`git clone https://github.com/MetalPhaser/RobberBounce.git`
 
 Install dependencies
 
@@ -31,9 +31,3 @@ Any modification to the files inside the `./src` and `./static` folder will trig
 
 If you modify the contents of other files, please manually restart the server.
 
-
-# FORKED FROM
-
-This structure started its life in Daniel Belohlavek's fantastic environment: [phaser-es6-boilerplate](https://github.com/belohlavek/phaser-es6-boilerplate).
-
-This version will likely get more and more specific to Metal Sole's needs and thus diverge greatly. But enough cannot be stated about Daniel's great work. If you are just looking around I **HIGHLY** advise looking through his repo first.

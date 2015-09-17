@@ -1,6 +1,14 @@
 
 export default {
 	stage : {
-		backgroundColor : '#463F54'
+		backgroundColor : '#EFEFEF'
+	},
+	physics : {
+		general : {
+			gravityY : 1600
+		}
+	},
+	controls : {
+		cursorKeyRepeatMills : 250
 	}
 }
