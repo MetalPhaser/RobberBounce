@@ -1,7 +1,7 @@
-import Config from '../config/game-config';
-import PlatformPrefab from '../prefabs/PlatformSimplePrefab';
-import KeyboardUtils from '../utils/KeyboardUtils';
-import MenuLaunchController from '../utils/MenuLaunchController';
+import Config from '../../config/game-config';
+import PlatformPrefab from '../../prefabs/PlatformSimplePrefab';
+import KeyboardUtils from '../../utils/KeyboardUtils';
+import MenuLaunchController from '../../utils/MenuLaunchController';
 
 
 class ThisState extends Phaser.State {

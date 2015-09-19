@@ -1,18 +1,25 @@
 import Config from '../config/game-config';
 //import KeyboardUtils from '../utils/KeyboardUtils';
 
-import GameState from '../states/GameState';
-import PlatformMoveTestState from '../states/PlatformMoveTestState';
-import BootyTossTestState from '../states/BootyTossTestState';
-import BootyTossWithPlatformTestState from '../states/BootyTossWithPlatformTestState';
-import BootyTossWithScoreTestState from '../states/BootyTossWithScoreTestState';
+import GameState from './GameState';
+import PlatformMoveTestState from './tests/PlatformMoveTestState';
+import BootyTossTestState from './tests/BootyTossTestState';
+import BootyTossWithPlatformTestState from './tests/BootyTossWithPlatformTestState';
+import BootyTossWithScoreTestState from './tests/BootyTossWithScoreTestState';
+
+import ScoreboardDebugState from './tests/scoreboard/ScoreboardDebugState';
+import ScoreboardTextState from './tests/scoreboard/ScoreboardTextState';
+import ScoreboardBMPFontState from './tests/scoreboard/ScoreboardBMPFontState';
 
 let menuItems = [
 	{stateName:'GameState',               state:GameState,              description:'GameState : A little platform game test'},
 	{stateName:'PlatformMoveTestState',   state:PlatformMoveTestState,  description:'PlatformMoveTestState : Move a platform'},
 	{stateName:'BootyTossTestState',      state:BootyTossTestState,     description:'BootyTossTestState : Toss some Booty!'},
 	{stateName:'BootyTossWithPlatformTestState',      state:BootyTossWithPlatformTestState,     description:'BootyTossWithPlatformTestState : First Play!'},
-	{stateName:'BootyTossWithScoreTestState',      state:BootyTossWithScoreTestState,     description:'BootyTossWithScoreTestState : Scores!'}
+	{stateName:'BootyTossWithScoreTestState',      state:BootyTossWithScoreTestState,     description:'BootyTossWithScoreTestState : Scores : console'},
+	{stateName:'ScoreboardDebugState',      state:ScoreboardDebugState,     description:'ScoreboardDebugState : Scoreboard : debug'},
+	{stateName:'ScoreboardTextState',      state:ScoreboardTextState,     description:'ScoreboardTextState : Scoreboard : text'},
+	{stateName:'ScoreboardBMPFontState',      state:ScoreboardBMPFontState,     description:'ScoreboardTextState : Scoreboard : BMP Text'}
 ];
 
 class MenuState extends Phaser.State {

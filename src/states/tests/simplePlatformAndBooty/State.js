@@ -1,7 +1,8 @@
-import Config from '../config/game-config';
-import BootyPrefab from '../prefabs/BootyPrefab';
-import KeyboardUtils from '../utils/KeyboardUtils';
-import MenuLaunchController from '../utils/MenuLaunchController';
+import Config from '../../../config/game-config';
+import BootyPrefab from '../../../prefabs/BootyPrefab';
+import PlatformPrefab from '../../../prefabs/PlatformSimplePrefab';
+import KeyboardUtils from '../../../utils/KeyboardUtils';
+import MenuLaunchController from '../../../utils/MenuLaunchController';
 
 
 class ThisState extends Phaser.State {
@@ -21,6 +22,7 @@ class ThisState extends Phaser.State {
 	preload() {
 		this.game.stage.backgroundColor      = Config.stage.backgroundColor;
 		BootyPrefab.preload(this.game);
+		PlatformPrefab.preload(this.game);
 	}
 
 	create() {
@@ -34,7 +36,15 @@ class ThisState extends Phaser.State {
 		this.addListeners();
 
 		// set up physics
-		this.game.physics.arcade.gravity.y = Config.physics.general.gravityY;
+		this.game.physics.arcade.gravity.y = Config.physics.general.gravitySlowY;
+
+
+		// Create a new platform
+		this.platform = new PlatformPrefab(this.game, 200, this.game.world.height - 50);
+
+		// and add it to the game
+		this.game.add.existing(this.platform);
+
 
 		// create our booty group
 		this.prefabGroup = this.game.add.group();
@@ -78,7 +88,9 @@ class ThisState extends Phaser.State {
 		this.menuLaunchController = null;
 	}
 
-	update() {}
+	update() {
+		this.game.physics.arcade.collide(this.prefabGroup, this.platform);
+	}
 
 }
 export default ThisState;

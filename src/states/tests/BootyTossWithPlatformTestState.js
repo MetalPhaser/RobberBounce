@@ -1,13 +1,13 @@
-import Config from '../config/game-config';
+import Config from '../../config/game-config';
 
-import BootyPrefab from '../prefabs/BootyPrefab';
-import PlatformPrefab from '../prefabs/PlatformSimplePrefab';
+import BootyPrefab from '../../prefabs/BootyPrefab';
+import PlatformPrefab from '../../prefabs/PlatformSimplePrefab';
 
-import KeyboardUtils from '../utils/KeyboardUtils';
-import MenuLaunchController from '../utils/MenuLaunchController';
-import BootyTossTestState from './BootyTossTestState'
+import KeyboardUtils from '../../utils/KeyboardUtils';
+import MenuLaunchController from '../../utils/MenuLaunchController';
+import BaseState from './simplePlatformAndBooty/State'
 
-class ThisState extends BootyTossTestState {
+class ThisState extends BaseState {
 
 	constructor() {
 		super();

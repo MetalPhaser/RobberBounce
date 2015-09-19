@@ -13,15 +13,13 @@ class GameState extends Phaser.State {
 		this.leftKey                = null;
 		this.rightKey               = null;
 		this.jumpKey                = null;
-		this.escKey                 = null;
 
 		// sprites
 		this.player                 = null;
 		this.platforms              = null;
 
 		// configuration
-		this.gravityStrength        = 1200;
-		this.jumpStrength           = 650;
+		this.jumpStrength           = Config.physics.general.gravityY/2;
 		this.moveStrength           = 250;
 		this.playerBounciness       = 0.2;
 	}
@@ -36,29 +34,29 @@ class GameState extends Phaser.State {
 
 	create() {
 
+		// set up physics
+		this.game.physics.arcade.gravity.y = Config.physics.general.gravityY;
+
 		this.menuLaunchController   = new MenuLaunchController(this.game);
 
 		this.leftKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 		this.rightKey         = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 		this.jumpKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		//this.escKey           = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-		//this.escKey.onDown.add(this.onEscapePress);
-		
-		//  Set the world (global) gravity
-		//game.physics.arcade.gravity.y = 1000;
 
-		this.platforms       = this.game.add.physicsGroup();
+		// PLATFORMS
+		this.platforms        = this.game.add.group();
+		this.platforms.enableBody = true;
 		this.platforms.create(500, 150, 'platform');
 		this.platforms.create(-200, 300, 'platform');
 		this.platforms.create(400, 450, 'platform');
 		this.platforms.setAll('body.immovable', true);
+		this.platforms.setAll('body.allowGravity', false);
 
-		this.player         = this.game.add.sprite(100, 0, 'player');
-
+		// PLAYER
+		this.player           = this.game.add.sprite(100, 0, 'player');
 		this.game.physics.arcade.enable(this.player);
 		this.player.body.collideWorldBounds = true;
 		this.player.body.bounce.y     = this.playerBounciness;
-		this.player.body.gravity.y    = this.gravityStrength;
 
 	}
 
@@ -89,10 +87,6 @@ class GameState extends Phaser.State {
 		//else if (jumpButton.isDown) {
 		//	player.body.velocity.y = -150;
 		//}
-	}
-
-	onEscapePress() {
-		console.log('you pressed ESC');
 	}
 
 }

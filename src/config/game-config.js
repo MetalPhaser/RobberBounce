@@ -5,7 +5,8 @@ export default {
 	},
 	physics : {
 		general : {
-			gravityY : 1600
+			gravityY : 1600,
+			gravitySlowY : 400
 		}
 	},
 	controls : {
