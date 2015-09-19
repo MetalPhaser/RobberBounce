@@ -1,6 +1,7 @@
 import Config from '../config/game-config';
-import PlatformPrefab from '../prefabs/PlatformPrefab';
+import PlatformPrefab from '../prefabs/PlatformSimplePrefab';
 import KeyboardUtils from '../utils/KeyboardUtils';
+import MenuLaunchController from '../utils/MenuLaunchController';
 
 
 class ThisState extends Phaser.State {
@@ -8,6 +9,10 @@ class ThisState extends Phaser.State {
 	constructor() {
 		super();
 		this.platform = null;
+		this.menuLaunchController   = null;
+		this.leftKey = null;
+		this.rightKey = null;
+		this.jumpKey = null;
 	}
 
 	preload() {
@@ -16,6 +21,7 @@ class ThisState extends Phaser.State {
 	}
 
 	create() {
+		this.menuLaunchController   = new MenuLaunchController(this.game);
 
 		// listen to things we care about (keys, clicks, presses)
 		this.addListeners();
@@ -55,6 +61,8 @@ class ThisState extends Phaser.State {
 
 	shutdown() {
 		this.removeListeners();
+		this.menuLaunchController.shutdown();
+		this.menuLaunchController = null;
 	}
 
 	update() {}

@@ -1,13 +1,15 @@
 import Config from '../config/game-config';
 import KeyboardUtils from '../utils/KeyboardUtils';
-
+import MenuLaunchController from '../utils/MenuLaunchController';
 
 class GameState extends Phaser.State {
 
 	constructor() {
 		super();
 
-		// keys
+		this.menuLaunchController   = null;
+
+			// keys
 		this.leftKey                = null;
 		this.rightKey               = null;
 		this.jumpKey                = null;
@@ -34,12 +36,13 @@ class GameState extends Phaser.State {
 
 	create() {
 
+		this.menuLaunchController   = new MenuLaunchController(this.game);
+
 		this.leftKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 		this.rightKey         = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
 		this.jumpKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		this.escKey           = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-
-		this.escKey.onDown.add(this.onEscapePress);
+		//this.escKey           = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+		//this.escKey.onDown.add(this.onEscapePress);
 		
 		//  Set the world (global) gravity
 		//game.physics.arcade.gravity.y = 1000;
@@ -59,7 +62,11 @@ class GameState extends Phaser.State {
 
 	}
 
-	shutdown() {}
+	shutdown() {
+		this.game.load.baseURL = '';
+		this.menuLaunchController.shutdown();
+		this.menuLaunchController = null;
+	}
 
 	pauseUpdate() {
 		//console.log('pauseUpdate');

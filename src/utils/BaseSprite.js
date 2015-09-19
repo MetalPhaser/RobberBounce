@@ -1,10 +1,17 @@
+/**
+ *  EXTENDS Phaser.Sprite
+ */
+class BaseSprite extends Phaser.Sprite {
 
-let SPRITEKEY = '_NAME_KEY_FOR_THIS_SPRITE_';
-let IMAGEPATH = '_PATH/TO/GRAPHIC/FILE_';
+	constructor(game, x, y, spriteKey) {
+		if ( !game ) {
+			throw new ReferenceError('Game reference was empty');
+		}
+		if ( !spriteKey ) {
+			throw new ReferenceError('SpriteKey reference was empty');
+		}
 
-class Prefab extends Phaser.Sprite {
-	constructor(game, x, y) {
-		super(game, x, y, Prefab.key);
+		super(game, x, y, spriteKey);
 
 		this.defineGeometry();
 		this.definePhysics();
@@ -72,20 +79,7 @@ class Prefab extends Phaser.Sprite {
 		//this.animations.play('flap', 12, true);
 	}
 	update() {}
+	kill() {}
 
-	// Example method
-	//jump() {
-	//	this.body.velocity.y = -400;
-	//}
-	static get key () {
-		return SPRITEKEY;
-	}
-	static preload (game) {
-		if ( !game ) {
-			throw new ReferenceError('Game reference was empty');
-		}
-
-		game.load.image(SPRITEKEY, IMAGEPATH);
-	}
 }
-export default State;
+export default BaseSprite;
