@@ -4,11 +4,16 @@ let SPRITEKEY = 'bootyPrefab';
 let IMAGEPATH = 'images/tests/green_rectangle.png';
 
 class Prefab extends BaseSprite {
-	constructor(game, x, y) {
+	constructor(game, x, y, xVelocity=0, yVelocity=0) {
 		super(game, x, y, SPRITEKEY);
 
-
-
+		// if velocity was given then assign it
+		if ( xVelocity ) {
+			this.body.velocity.x       = xVelocity;
+		}
+		if ( yVelocity ) {
+			this.body.velocity.y       = yVelocity;
+		}
 	}
 	static preload (game) {
 		game.load.image(SPRITEKEY, IMAGEPATH);
@@ -50,26 +55,31 @@ class Prefab extends BaseSprite {
 		this.events.onOutOfBounds.add(this.outOfBounds, this);
 	}
 	defineAnimations() {}
-	update() {}
 	outOfBounds() {
 		// fail
 		if ( this.didExitBottom() ) {
-			this.game.bootyFails++;
+			this.game.gameModel.scoreCurrentLevel.itemsDropped++;
 		}
 
 		// score
 		else {
-			this.game.bootyScore++;
+			this.game.gameModel.scoreCurrentLevel.itemsCollected++;
 
 		}
 		this.printScore();
 		this.kill();
 	}
-	kill() {}
-	destroy() {}
+	kill() {
+		super.kill();
+	}
 
 	printScore() {
-		console.log('Score', this.game.bootyScore+'/'+this.game.bootyFails);
+
+		//console.log('scoreCurrentLevel', this.game.gameModel.scoreCurrentLevel);
+
+		//let collected = this.game.gameModel.scoreCurrentLevel.itemsCollected;
+		//let dropped = this.game.gameModel.scoreCurrentLevel.itemsDropped;
+		//console.log('Score', collected+'/'+dropped);
 	}
 
 	didExitBottom() {

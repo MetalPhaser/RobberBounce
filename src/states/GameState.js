@@ -1,6 +1,6 @@
 import Config from '../config/game-config';
 import KeyboardUtils from '../utils/KeyboardUtils';
-import MenuLaunchController from '../utils/MenuLaunchController';
+import MenuLaunchController from '../controllers/MenuLaunchController';
 
 class GameState extends Phaser.State {
 

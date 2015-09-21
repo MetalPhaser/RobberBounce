@@ -4,8 +4,8 @@ import BootyPrefab from '../../prefabs/BootyPrefab';
 import PlatformPrefab from '../../prefabs/PlatformSimplePrefab';
 
 import KeyboardUtils from '../../utils/KeyboardUtils';
-import MenuLaunchController from '../../utils/MenuLaunchController';
-import BaseState from './simplePlatformAndBooty/State'
+import MenuLaunchController from '../../controllers/MenuLaunchController';
+import BaseState from './autoTossers/TimedTosserState'
 
 class ThisState extends BaseState {
 
@@ -39,7 +39,7 @@ class ThisState extends BaseState {
 
 	update() {
 		super.update();
-		this.game.physics.arcade.collide(this.prefabGroup, this.platform);
+		this.game.physics.arcade.collide(this.bootyGroup, this.platform);
 	}
 	shutdown() {
 		super.shutdown();

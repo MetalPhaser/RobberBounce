@@ -10,6 +10,6 @@ export default {
 		}
 	},
 	controls : {
-		cursorKeyRepeatMills : 250
+		cursorKeyRepeatMills : 200
 	}
 }

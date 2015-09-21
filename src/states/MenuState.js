@@ -11,6 +11,8 @@ import ScoreboardDebugState from './tests/scoreboard/ScoreboardDebugState';
 import ScoreboardTextState from './tests/scoreboard/ScoreboardTextState';
 import ScoreboardBMPFontState from './tests/scoreboard/ScoreboardBMPFontState';
 
+import WavesSimpleTosserState from './tests/waves/WavesSimpleTosserState';
+
 let menuItems = [
 	{stateName:'GameState',               state:GameState,              description:'GameState : A little platform game test'},
 	{stateName:'PlatformMoveTestState',   state:PlatformMoveTestState,  description:'PlatformMoveTestState : Move a platform'},
@@ -19,7 +21,8 @@ let menuItems = [
 	{stateName:'BootyTossWithScoreTestState',      state:BootyTossWithScoreTestState,     description:'BootyTossWithScoreTestState : Scores : console'},
 	{stateName:'ScoreboardDebugState',      state:ScoreboardDebugState,     description:'ScoreboardDebugState : Scoreboard : debug'},
 	{stateName:'ScoreboardTextState',      state:ScoreboardTextState,     description:'ScoreboardTextState : Scoreboard : text'},
-	{stateName:'ScoreboardBMPFontState',      state:ScoreboardBMPFontState,     description:'ScoreboardTextState : Scoreboard : BMP Text'}
+	{stateName:'ScoreboardBMPFontState',      state:ScoreboardBMPFontState,     description:'ScoreboardBMPState : Scoreboard : BMP Text'},
+	{stateName:'WavesSimpleTosserState',      state:WavesSimpleTosserState,     description:'WavesSimpleTosserState : Waves : Simple tosser'}
 ];
 
 class MenuState extends Phaser.State {

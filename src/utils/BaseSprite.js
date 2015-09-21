@@ -78,8 +78,12 @@ class BaseSprite extends Phaser.Sprite {
 		//this.animations.add('flap');
 		//this.animations.play('flap', 12, true);
 	}
-	update() {}
-	kill() {}
+	//update() {
+	//  super.update();
+	//}
+	//kill() {
+	//	super.kill();
+	//}
 
 }
 export default BaseSprite;

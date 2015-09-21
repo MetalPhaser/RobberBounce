@@ -1,4 +1,4 @@
-import BaseState from '../simplePlatformAndBooty/State'
+import BaseState from '../autoTossers/TimedTosserState'
 
 class ThisState extends BaseState {
 
@@ -12,8 +12,9 @@ class ThisState extends BaseState {
 	}
 
 	render() {
-		// text(text, x, y, color, font)
-		this.game.debug.text( 'Score: ' + this.game.bootyScore + '/' + this.game.bootyFails, 20, 32, "#808080");
+		let collected = this.game.gameModel.scoreCurrentLevel.itemsCollected;
+		let dropped = this.game.gameModel.scoreCurrentLevel.itemsDropped;
+		this.game.debug.text( 'Score: ' + collected + '/' + dropped, 20, 32, "#808080");
 	}
 
 }

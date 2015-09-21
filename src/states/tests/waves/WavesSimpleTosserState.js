@@ -1,4 +1,4 @@
-import BaseState from '../autoTossers/TimedTosserState'
+import BaseState from '../autoTossers/AutoTosserState'
 
 class ThisState extends BaseState {
 
@@ -6,6 +6,7 @@ class ThisState extends BaseState {
 		super.create();
 		this.scoreLabel                     = null;
 		this.defineText();
+		console.log('AUTO TOSS');
 	}
 
 	update() {

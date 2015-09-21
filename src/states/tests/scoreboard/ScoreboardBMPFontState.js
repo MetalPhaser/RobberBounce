@@ -1,4 +1,4 @@
-import BaseState from '../simplePlatformAndBooty/State'
+import BaseState from '../autoTossers/TimedTosserState'
 
 class ThisState extends BaseState {
 
@@ -14,7 +14,9 @@ class ThisState extends BaseState {
 	}
 	update() {
 		super.update();
-		this.scoreLabel.text                = this.game.bootyScore + ' / ' + this.game.bootyFails;
+		let collected = this.game.gameModel.scoreCurrentLevel.itemsCollected;
+		let dropped = this.game.gameModel.scoreCurrentLevel.itemsDropped;
+		this.scoreLabel.text                = collected + ' / ' + dropped;
 	}
 
 	defineText() {
