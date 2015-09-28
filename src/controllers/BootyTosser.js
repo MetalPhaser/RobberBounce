@@ -1,18 +1,19 @@
 import BootyPrefab from '../prefabs/BootyPrefab';
+import MGU from '../utils/MGU';
 
 class BootyTosser {
 	constructor(game, bootyGroup, tossPeriodMills=2000) {
 		this.game             = game;
 		this.bootyGroup       = bootyGroup;
-		this.nextTossMills    = this.game.time.now; // be ready immediately
-
 		this.tossPeriodMills  = tossPeriodMills;
+		this.nextTossMills    = null;
+		this.maxTossed        = 9;
+		this.tossedCount      = 0;
 
-		// get a random generator to use
-		var seed              = 0;
-		this.rng              = new Phaser.RandomDataGenerator([(seed).toString()]);
+		this.tossOptions      = {
 
-		this.newCount = 0;
+		};
+		this.calculateNextToss();
 	}
 	tossWhenReady() {
 		if ( this.isReadyToToss ) {
@@ -25,10 +26,10 @@ class BootyTosser {
 		let xPosition       = this.game.world.width - 1;
 
 		// window
-		let yPosition       = this.rng.between(50, 300); // window
+		let yPosition       = MGU.random(50, 300);
 
 		// travel speed
-		let xVelocity       = this.rng.between(-400, -100);
+		let xVelocity       = MGU.random(-400, -100);
 
 		// Create a new booty object
 		let booty           = this._getBootyObject(xPosition, yPosition, xVelocity);
@@ -36,44 +37,50 @@ class BootyTosser {
 		// and add it to the group
 		if ( booty ) {
 			this.bootyGroup.add(booty);
+			this.tossedCount++;
 		}
 
-		// recalc next toss times
-		this.calculateNextTossTime();
+		this.calculateNextToss();
 	}
 	destroy() {
 		this.game          = null;
 	}
 	get isReadyToToss() {
+		if ( this.tossedCount >= this.maxTossed ) {
+			return false;
+		}
 		return this.game.time.now >= this.nextTossMills;
 	}
 	get timeUntilToss() {
 		return Math.max(0, this.nextTossMills - this.game.time.now);
 	}
-	calculateNextTossTime() {
-		this.nextTossMills = this.game.time.now + this.tossPeriodMills;
+	calculateNextToss() {
+		// never tossed before - be ready right away
+		if ( !this.nextTossMills ) {
+			this.nextTossMills = this.game.time.now;
+		}
+
+		// retossing
+		else {
+			this.nextTossMills = this.game.time.now + this.tossPeriodMills;
+		}
+
+
+
 	}
 	_getBootyObject(xPosition, yPosition, xVelocity) {
 		// try to get one that is killed already
 		let booty = this.bootyGroup.getFirstExists(false);
 
+		// recycled a BOOTY, reset it!
 		if ( booty ) {
-			booty.revive();
+			booty.reset(xPosition, yPosition, xVelocity);
 		}
 
 		// create one if there isn't one
 		else {
-			this.newCount++;
 			booty           = new BootyPrefab(this.game, xPosition, yPosition, xVelocity);
 		}
-
-		// set positions and velocity
-		booty.x = xPosition;
-		booty.y = yPosition;
-		booty.body.velocity.x = xVelocity;
-		booty.body.velocity.y = 0;
-
-		console.log(' > booty count', this.bootyGroup.length);
 
 		return booty;
 	}

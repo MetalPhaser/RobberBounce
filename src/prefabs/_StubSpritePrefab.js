@@ -4,7 +4,7 @@ let IMAGEPATH = '_PATH/TO/GRAPHIC/FILE_';
 
 class Prefab extends Phaser.Sprite {
 	constructor(game, x, y) {
-		super(game, x, y, Prefab.key);
+		super(game, x, y, SPRITEKEY);
 
 		this.defineGeometry();
 		this.definePhysics();
@@ -88,4 +88,4 @@ class Prefab extends Phaser.Sprite {
 		game.load.image(SPRITEKEY, IMAGEPATH);
 	}
 }
-export default State;
+export default Prefab;

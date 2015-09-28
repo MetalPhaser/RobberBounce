@@ -1,92 +1,127 @@
-import Config from '../config/game-config';
+import BaseGameState from './BaseGameState';
+//import Config from '../config/game-config';
+import BootyPrefab from '../prefabs/BootyPrefab';
 import KeyboardUtils from '../utils/KeyboardUtils';
-import MenuLaunchController from '../controllers/MenuLaunchController';
+import MGU from '../utils/MGU';
+import BootyTosser from '../controllers/BootyTosser';
 
-class GameState extends Phaser.State {
+import ColumnGuide from '../prefabs/guides/ColumnGuidePrefab';
 
+class GameState extends BaseGameState {
 	constructor() {
 		super();
 
-		this.menuLaunchController   = null;
+		this.bootyGroup         = null;
+		this.scoreLabel         = null;
+		this.bootyTossers       = [];
 
-			// keys
-		this.leftKey                = null;
-		this.rightKey               = null;
-		this.jumpKey                = null;
+		this.guides             = [];
 
-		// sprites
-		this.player                 = null;
-		this.platforms              = null;
-
-		// configuration
-		this.jumpStrength           = Config.physics.general.gravityY/2;
-		this.moveStrength           = 250;
-		this.playerBounciness       = 0.2;
+		this._lastCollectedCount = 0;
 	}
-
 	preload() {
-    this.game.stage.backgroundColor      = '#85b5e1';
-    this.game.load.baseURL               = 'http://examples.phaser.io/assets/';
-    this.game.load.crossOrigin           = 'anonymous';
-		this.game.load.image('player', 'sprites/phaser-dude.png');
-		this.game.load.image('platform', 'sprites/platform.png');
+		super.preload();
+		BootyPrefab.preload(this.game);
 	}
-
 	create() {
+		super.create();
 
-		// set up physics
-		this.game.physics.arcade.gravity.y = Config.physics.general.gravityY;
+		this.addGuides();
 
-		this.menuLaunchController   = new MenuLaunchController(this.game);
+		this.defineText();
+		this.defineTossers();
 
-		this.leftKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-		this.rightKey         = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-		this.jumpKey          = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-		// PLATFORMS
-		this.platforms        = this.game.add.group();
-		this.platforms.enableBody = true;
-		this.platforms.create(500, 150, 'platform');
-		this.platforms.create(-200, 300, 'platform');
-		this.platforms.create(400, 450, 'platform');
-		this.platforms.setAll('body.immovable', true);
-		this.platforms.setAll('body.allowGravity', false);
-
-		// PLAYER
-		this.player           = this.game.add.sprite(100, 0, 'player');
-		this.game.physics.arcade.enable(this.player);
-		this.player.body.collideWorldBounds = true;
-		this.player.body.bounce.y     = this.playerBounciness;
-
+		this.addListeners();
 	}
 
-	shutdown() {
-		this.game.load.baseURL = '';
-		this.menuLaunchController.shutdown();
-		this.menuLaunchController = null;
+	addGuides() {
+		this.guides.push(new ColumnGuide(this.game, this.game.world.width, this.game.world.height, this.getColumnWidth()));
+
+		this.game.add.image(0, 0, this.guides[0]);
 	}
 
-	pauseUpdate() {
-		//console.log('pauseUpdate');
+	defineTossers() {
+		this.bootyGroup = this.game.add.group();
+		this.addATosser();
+	}
+	addATosser() {
+		this.bootyTossers.push(new BootyTosser(this.game, this.bootyGroup, MGU.random(1500,800)));
+	}
+	doTosserWork() {
+		let collected           = this.game.gameModel.scoreCurrentLevel.itemsCollected;
+
+		// ADD A NEW TOSSER
+		if (this._lastCollectedCount !== collected && collected % 2 === 0 ) {
+			this.addATosser();
+			this._lastCollectedCount = collected;
+		}
+
+		// TELL TOSSERS TO TOSS
+		this.bootyTossers.every( (elem) => elem.tossWhenReady() );
 	}
 	update() {
-		this.game.physics.arcade.collide(this.player, this.platforms);
+		super.update();
+		// COLLIDE BOOTY ITEMS AND PLATFORM
+		this.game.physics.arcade.collide(this.bootyGroup, this.platform);
 
-		this.player.body.velocity.x = 0;
-		//console.log('this.leftKey', this.leftKey.isDown, this.leftKey);
-		if (this.leftKey.isDown) {
-			this.player.body.velocity.x = -(this.moveStrength);
-		}
-		else if (this.rightKey.isDown) {
-			this.player.body.velocity.x = this.moveStrength;
-		}
+		// LET TOSSER-CREW WORK
+		this.doTosserWork();
 
-		if (this.jumpKey.isDown && (this.player.body.onFloor() || this.player.body.touching.down)) {
-			this.player.body.velocity.y = -(this.jumpStrength);
-		}
-		//else if (jumpButton.isDown) {
-		//	player.body.velocity.y = -150;
-		//}
+		// REDRAW SCORE BOARD
+		this.redrawScoreboard();
+	}
+	redrawScoreboard() {
+		let collected           = this.game.gameModel.scoreCurrentLevel.itemsCollected;
+		let dropped             = this.game.gameModel.scoreCurrentLevel.itemsDropped;
+		this.scoreLabel.text    = collected + ' / ' + dropped;
+	}
+	shutdown() {
+		super.shutdown();
+		this.removeListeners();
+	}
+	defineText() {
+		this.scoreLabel                     = this.game.add.text(20, 32, '');
+
+		//	Center align
+		//this.scoreLabel.anchor.set(0.5);
+		//this.scoreLabel.align               = 'center';
+
+		//	Font style
+		this.scoreLabel.font                = 'Arial Black';
+		this.scoreLabel.fontSize            = 30;
+		this.scoreLabel.fontWeight          = 'bold';
+
+		//	Stroke color and thickness
+		this.scoreLabel.strokeThickness     = 4;
+		this.scoreLabel.stroke              = '#41523A';
+		this.scoreLabel.fill                = '#526B48';
+
+
+		let grd = this.scoreLabel.context.createLinearGradient(0, 0, 0, this.scoreLabel.height);
+		//  Add in 2 color stops
+		grd.addColorStop(0, '#C1F4AB');
+		grd.addColorStop(1, '#526B48');
+
+		//  And apply to the Text
+		this.scoreLabel.fill = grd;
+
+	}
+	addListeners() {
+		super.addListeners();
+		//this.throwKey          = KeyboardUtils.getKey(this.game, Phaser.Keyboard.SPACEBAR);
+		//this.throwKey.onDown.add(this.throwBooty, this);
+	}
+	removeListeners() {
+		super.removeListeners();
+		// remove all edits to the keyboard (for now)
+		this.game.input.keyboard.reset(true);
+	}
+
+	/**
+	 *  STATE-SPECIFIC FUNCTIONS
+	 */
+	getColumnWidth() {
+		return MGU.getIntValue(this.game.world.width / 3);
 	}
 
 }

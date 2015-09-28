@@ -1,3 +1,4 @@
+import MGU from '../utils/MGU';
 
 import BaseSprite from '../utils/BaseSprite'
 import Config from '../config/game-config';
@@ -8,8 +9,9 @@ let IMAGEPATH = 'images/tests/green_rectangle.png';
 
 class Prefab extends BaseSprite {
 
-	constructor(game, x, y) {
+	constructor(game, x, y, width) {
 		super(game, x, y, SPRITEKEY);
+		this.width = width;
 		this.addListeners();
 	}
 	static preload (game) {
@@ -20,7 +22,8 @@ class Prefab extends BaseSprite {
 		 *  Set Size
 		 *  If you need to
 		 */
-		this.width = 100;
+
+		//this.width = MGU.getIntValue(this.game.world.width / 3);
 		this.height = 20;
 	}
 	definePhysics() {

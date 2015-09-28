@@ -1,9 +1,11 @@
-import Config from '../../../config/game-config';
-import BootyPrefab from '../../../prefabs/BootyPrefab';
-import PlatformPrefab from '../../../prefabs/PlatformSimplePrefab';
-import KeyboardUtils from '../../../utils/KeyboardUtils';
-import MenuLaunchController from '../../../controllers/MenuLaunchController';
-import BootyTosser from '../../../controllers/BootyTosser';
+import Config from '../config/game-config';
+import MGU from '../utils/MGU';
+
+import BootyPrefab from '../prefabs/BootyPrefab';
+import PlatformPrefab from '../prefabs/PlatformPrefab';
+import KeyboardUtils from '../utils/KeyboardUtils';
+import MenuLaunchController from '../controllers/MenuLaunchController';
+import BootyTosser from '../controllers/BootyTosser';
 
 class ThisState extends Phaser.State {
 
@@ -11,13 +13,12 @@ class ThisState extends Phaser.State {
 		super();
 		this.bootyGroup           = null;
 		this.menuLaunchController = null;
-	}
 
+	}
 	preload() {
 		this.game.stage.backgroundColor      = Config.stage.backgroundColor;
 		PlatformPrefab.preload(this.game);
 	}
-
 	create() {
 
 		this.menuLaunchController   = new MenuLaunchController(this.game);
@@ -30,7 +31,7 @@ class ThisState extends Phaser.State {
 
 
 		// Create a new platform
-		this.platform = new PlatformPrefab(this.game, 200, this.game.world.height - 50);
+		this.platform = new PlatformPrefab(this.game, 0, this.game.world.height - 70, this.getColumnWidth());
 
 		// and add it to the game
 		this.game.add.existing(this.platform);
@@ -38,9 +39,7 @@ class ThisState extends Phaser.State {
 		// create our booty group
 		this.bootyGroup = this.game.add.group();
 	}
-
 	addListeners() {}
-
 	removeListeners() {
 		// remove all edits to the keyboard (for now)
 		this.game.input.keyboard.reset(true);
@@ -51,12 +50,17 @@ class ThisState extends Phaser.State {
 		}
 
 	}
-
 	shutdown() {
 		this.removeListeners();
 	}
-
 	update() {}
 
+
+	/**
+	 *  STATE-SPECIFIC FUNCTIONS
+	 */
+	getColumnWidth() {
+		return MGU.getIntValue(this.game.world.width / 3);
+	}
 }
 export default ThisState;
