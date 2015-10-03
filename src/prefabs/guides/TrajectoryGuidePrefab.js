@@ -86,5 +86,8 @@ class Prefab extends Phaser.BitmapData {
 
 		this.context.fillStyle = 'rgba('+val1+', '+val2+', '+val3+', 0.5)';
 	}
+	timeToFall(height, gravity) {
+		return Math.sqrt( 2 * height / gravity );
+	}
 }
 export default Prefab;

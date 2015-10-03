@@ -1,5 +1,7 @@
 import BootyPrefab from '../prefabs/BootyPrefab';
+import config from '../config/game-config';
 import MGU from '../utils/MGU';
+import GameFuncs from '../utils/GameFuncs';
 
 class BootyTosser {
 	constructor(game, bootyGroup, tossPeriodMills=2000) {
@@ -10,9 +12,11 @@ class BootyTosser {
 		this.maxTossed        = 9;
 		this.tossedCount      = 0;
 
-		this.tossOptions      = {
+		this.tossOptions      = {};
 
-		};
+		this.tossPeriodMills = 1000;
+
+
 		this.calculateNextToss();
 	}
 	tossWhenReady() {
@@ -22,17 +26,32 @@ class BootyTosser {
 	}
 	toss() {
 
+		// Create a new booty object (we need the size)
+		let booty                   = this._getBootyObject(0, 0, 0);
+
 		// building
-		let xPosition       = this.game.world.width - 1;
+		let xPosition               = this.game.world.width - 1;
 
 		// window
-		let yPosition       = MGU.random(50, 300);
+		let yPosition               = MGU.random(booty.height, this.game.world.height - (booty.height * 10));
+
+		// height
+		let height                  = this.game.world.height - yPosition;
+
+		// where we want to hit
+		let channelWidth            = this.game.world.width / 3;
+		let landingX                = channelWidth / 1.65;
+
+		// current gravity
+		let gravity                 = config.physics.general.gravitySlowY;
 
 		// travel speed
-		let xVelocity       = MGU.random(-400, -100);
+		let xVelocity               = -1 * GameFuncs.velocityToTravelXFromHeight(landingX, height, gravity);
 
-		// Create a new booty object
-		let booty           = this._getBootyObject(xPosition, yPosition, xVelocity);
+		// put values on the object
+		booty.x                     = xPosition;
+		booty.y                     = yPosition;
+		booty.body.velocity.x       = xVelocity;
 
 		// and add it to the group
 		if ( booty ) {

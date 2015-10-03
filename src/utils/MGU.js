@@ -204,31 +204,31 @@ UTILS.getArrayValue         = function (value, delim) {
 /**
  *  IS-TYPEers
  */
-UTILS.isArray                 = function (obj) {
+UTILS.isArray               = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object Array]';
 };
-UTILS.isString                = function (obj) {
+UTILS.isString              = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object String]';
 };
-UTILS.isDate                  = function (obj) {
+UTILS.isDate                = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object Date]';
 };
-UTILS.isNumber                = function (obj) {
+UTILS.isNumber              = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object Number]';
 };
-UTILS.isRegExp                = function (obj) {
+UTILS.isRegExp              = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object RegExp]';
 };
-UTILS.isBoolean               = function (obj) {
+UTILS.isBoolean             = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object Boolean]';
 };
-UTILS.isInt                   = function (obj) {
+UTILS.isInt                 = function (obj) {
 	return UTILS.isNumber(obj) && obj % 1 === 0;
 };
-UTILS.isFunction              = function (obj) {
+UTILS.isFunction            = function (obj) {
 	return Object.prototype.toString.call( obj ) === '[object Function]';
 };
-UTILS.isObject                = function (obj) {
+UTILS.isObject              = function (obj) {
 	// Null and Undefined are also objects in JavaScript
 	// when we are asking if this is an Object
 	// we mean to say
@@ -237,7 +237,7 @@ UTILS.isObject                = function (obj) {
 	}
 	return Object.prototype.toString.call( obj ) === '[object Object]';
 };
-UTILS.isJquery                = function (obj) {
+UTILS.isJquery              = function (obj) {
 	if ( UTILS.isNoE(obj) ) {
 		return false;
 	}
@@ -410,6 +410,60 @@ UTILS.startsWith            = function (string, lookFor, caseInsensitive) {
 
 	return string.slice(0, lookFor.length) === lookFor;
 };
+UTILS.merge                 = function (root) {
+
+	if (arguments.length < 1) {
+		return null;
+	}
+	root		= root || {};
+
+	// GO THROUGH EACH OBJECT SENT TO US
+	// starting at 1 to skip 'root'
+	for ( var i = 1; i < arguments.length; i++ ) {
+
+		var objectToTakeFrom	= arguments[i];
+
+		// ONLY WORK ARRAYS AND OBJECTS
+		if ( UTILS.isObject(objectToTakeFrom) || UTILS.isArray(objectToTakeFrom) ) {
+			// GET THE PROPERTIES FROM THIS OBJECT
+			for ( var key in objectToTakeFrom ) {
+
+				// IF THIS PROPERTY IS OWNED BY THIS OBJECT
+				if ( objectToTakeFrom.hasOwnProperty(key)) {
+
+					var propertyToMerge	= objectToTakeFrom[key];
+					var propertyOnRoot	= root[key] || null;
+
+					// ROOT DOES NOT HAVE THIS OBJECT - move it over entirely
+					// allow null value to be moved over
+					if ( propertyOnRoot === null || propertyToMerge === null || typeof propertyToMerge !== 'object') {
+						root[key] = propertyToMerge;
+					}
+
+					// NON-OBJECT & ARRAY -- overwrite entirely
+					else if ( UTILS.isArray(propertyToMerge) || typeof propertyToMerge !== 'object') {
+						root[key] = propertyToMerge;
+					}
+
+					// EMPTY OBJECT
+					// odd scenario where if given an empty object {} we were skipping it all
+					else if ( typeof propertyToMerge === 'object' && Object.keys(propertyToMerge).length < 1) {
+						root[key] = propertyToMerge;
+					}
+
+					// ROOT ALREADY HAS A PROPERTY WITH THIS NAME
+					// deep merge to maintain as much data as possible
+					else {
+						root[key] = UTILS.merge(propertyOnRoot, propertyToMerge);
+					}
+				}
+			}
+		}
+
+	}
+	return root;
+};
+
 
 /**
  *  RANDOMS AND ROLLS

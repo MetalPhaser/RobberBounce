@@ -1,4 +1,8 @@
-import BaseSprite from '../utils/BaseSprite'
+import ConfigPrefab from './ConfigPrefab';
+
+import MGU from '../utils/MGU'
+import GameFuncs from '../utils/GameFuncs'
+import SSConfig from '../config/booty-ss-config';
 
 import TrajectoryGuide from './guides/TrajectoryGuidePrefab';
 import ObjectHighlightGuide from './guides/ObjectHighlightGuidePrefab';
@@ -6,34 +10,97 @@ import ObjectHighlightGuide from './guides/ObjectHighlightGuidePrefab';
 let SPRITEKEY = 'bootyPrefab';
 let IMAGEPATH = 'images/tests/green_rectangle.png';
 
-class Prefab extends BaseSprite {
-	constructor(game, x, y, xVelocity=0, yVelocity=0) {
-		super(game, x, y, SPRITEKEY);
+let hasPreloaded = false;
+let _types = [];
+let _entities = {};
 
-		this.trajectoryGuide = new TrajectoryGuide(this.game, this);
-		this.game.add.image(0, 0, this.trajectoryGuide);
+class BootyPrefab extends ConfigPrefab {
+	constructor(game, x=0, y=0, xVelocity=0, yVelocity=0) {
 
-		this.objectHighlightGuide = new ObjectHighlightGuide(this.game, this);
-		this.game.add.image(0, 0, this.objectHighlightGuide);
+		// get random type
+		var typeKey         = BootyPrefab.types[MGU.random(BootyPrefab.types.length-1)];
+		var config          = BootyPrefab.entities[typeKey];
 
-		// if velocity was given then assign it
+		// call ConfigPrefab class
+		super(game, config, x, y);
+
+		// PLAY IDLE ANIMATION
+		this.animations.play('idle');
+
+		this.useTrajectoryGuide = false;
+		this.useObjectHighlight = false;
+
+		// load config from type
+		this.type     = typeKey;
+		this.config   = config;
+
+		// define this object
+		this.defineGeometry();
+		this.definePhysics();
+		this.defineAnimations();
+
+		// set up the path guide
+		if ( this.useTrajectoryGuide ) {
+			this.trajectoryGuide = new TrajectoryGuide(this.game, this);
+			this.game.add.image(0, 0, this.trajectoryGuide);
+		}
+
+		// add an object highlight
+		if ( this.useObjectHighlight ) {
+			this.objectHighlightGuide = new ObjectHighlightGuide(this.game, this);
+			this.game.add.image(0, 0, this.objectHighlightGuide);
+		}
+
+		// assign velocity - if provided
 		if ( xVelocity ) {
 			this.body.velocity.x       = xVelocity;
 		}
 		if ( yVelocity ) {
 			this.body.velocity.y       = yVelocity;
 		}
+
+
+		this.spin();
 	}
 	static preload (game) {
-		game.load.image(SPRITEKEY, IMAGEPATH);
+
+		if ( !hasPreloaded ) {
+			hasPreloaded = true;
+			BootyPrefab.preloadAssets(game);
+		}
+
 	}
+
+	static get types() { return _types; }
+	static get entities() { return _entities; }
+
+	static preloadAssets(game) {
+		// go through the SS config file
+		for ( let sheetKey of Object.keys(SSConfig) ) {
+
+			// install the spritesheet
+			var entities = GameFuncs.installSpritesheetFromConfig(game, sheetKey, SSConfig[sheetKey]);
+
+			MGU.merge(BootyPrefab.entities, entities);
+			Array.prototype.push.apply(BootyPrefab.types, Object.keys(entities));
+
+		}
+
+		console.log('Booty Types', BootyPrefab.types);
+		console.log('Booty Entities', BootyPrefab.entities);
+	}
+
 	defineGeometry() {
 		/**
 		 *  Set Size
 		 *  If you need to
 		 */
-		this.width = 25;
-		this.height = 25;
+		this.anchor.add(0.5, 0.5);
+
+		//this.scale.setTo(0.05,0.05);
+
+		this.width = this.config.size.width;
+		this.height = this.config.size.height;
 	}
 	definePhysics() {
 		/**
@@ -64,13 +131,21 @@ class Prefab extends BaseSprite {
 		this.events.onOutOfBounds.add(this.outOfBounds, this);
 	}
 	defineAnimations() {}
+	spin() {
+		//this.game.add.tween(this).to({angle: 360}, 3000).start();
+		this.game.add.tween(this).to({angle: -360}, MGU.random(5000,800), Phaser.Easing.Linear.NONE, true, 0, 1000, false);
 
+	}
 	update() {
 		super.update();
-		this.trajectoryGuide.redraw(this.x, this.y);
-		this.objectHighlightGuide.redraw(this.x, this.y);
-	}
+		if ( this.trajectoryGuide ) {
+			this.trajectoryGuide.redraw(this.x, this.y);
+		}
+		if ( this.objectHighlightGuide ) {
+			this.objectHighlightGuide.redraw(this.x, this.y);
+		}
 
+	}
 	outOfBounds() {
 		// fail
 		if ( this.didExitBottom() ) {
@@ -87,18 +162,26 @@ class Prefab extends BaseSprite {
 	}
 	kill() {
 		super.kill();
-		this.trajectoryGuide.remove();
-		this.objectHighlightGuide.remove();
+		if ( this.trajectoryGuide ) {
+			this.trajectoryGuide.remove();
+		}
+		if ( this.objectHighlightGuide ) {
+			this.objectHighlightGuide.remove();
+		}
 	}
 	reset(x=0, y=0, xVelocity=0) {
 		super.reset(x, y);
 		this.revive();
 		this.body.velocity.x=xVelocity;
 		this.body.velocity.y=0;
-		this.trajectoryGuide.reset();
-		this.objectHighlightGuide.reset();
-	}
 
+		if ( this.trajectoryGuide ) {
+			this.trajectoryGuide.reset();
+		}
+		if ( this.objectHighlightGuide ) {
+			this.objectHighlightGuide.reset();
+		}
+	}
 	printScore() {
 
 		//console.log('scoreCurrentLevel', this.game.gameModel.scoreCurrentLevel);
@@ -107,7 +190,6 @@ class Prefab extends BaseSprite {
 		//let dropped = this.game.gameModel.scoreCurrentLevel.itemsDropped;
 		//console.log('Score', collected+'/'+dropped);
 	}
-
 	didExitBottom() {
 		return this.body.y > this.game.world.height;
 	}
@@ -115,4 +197,4 @@ class Prefab extends BaseSprite {
 		return this.body.x < 0;
 	}
 }
-export default Prefab;
+export default BootyPrefab;

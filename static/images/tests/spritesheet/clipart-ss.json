@@ -1,0 +1,44 @@
+{"frames": {
+
+"clip-chair":
+{
+	"frame": {"x":2,"y":1045,"w":432,"h":599},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":432,"h":599},
+	"sourceSize": {"w":432,"h":599}
+},
+"clip-coffee-cup":
+{
+	"frame": {"x":2,"y":595,"w":500,"h":448},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":448},
+	"sourceSize": {"w":500,"h":448}
+},
+"clip-purse":
+{
+	"frame": {"x":2,"y":2,"w":500,"h":591},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":500,"h":591},
+	"sourceSize": {"w":500,"h":591}
+},
+"clip-trophy":
+{
+	"frame": {"x":2,"y":1646,"w":248,"h":265},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":7,"w":248,"h":265},
+	"sourceSize": {"w":250,"h":272}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "clipart-ss.png",
+	"format": "RGBA8888",
+	"size": {"w":504,"h":1913},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:0e2e69ee1f84bc38835a3b3678ed1fda:c7140256cc3718af770caecc04d518ba:0f6d3d9e22062b8dc67a3d1c6b47efc1$"
+}
+}
