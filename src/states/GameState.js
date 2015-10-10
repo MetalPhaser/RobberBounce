@@ -1,5 +1,6 @@
 import BaseGameState from './BaseGameState';
 //import Config from '../config/game-config';
+import GamePreloader from '../controllers/GamePreloader';
 import BootyPrefab from '../prefabs/BootyPrefab';
 import KeyboardUtils from '../utils/KeyboardUtils';
 import MGU from '../utils/MGU';
@@ -21,6 +22,9 @@ class GameState extends BaseGameState {
 	}
 	preload() {
 		super.preload();
+
+		GamePreloader.preloadBooty(this.game);
+
 		BootyPrefab.preload(this.game);
 	}
 	create() {

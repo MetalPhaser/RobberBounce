@@ -2,7 +2,7 @@ import ConfigPrefab from './ConfigPrefab';
 
 import MGU from '../utils/MGU'
 import GameFuncs from '../utils/GameFuncs'
-import SSConfig from '../config/booty-ss-config';
+import GameConfig from '../config/game-config';
 
 import TrajectoryGuide from './guides/TrajectoryGuidePrefab';
 import ObjectHighlightGuide from './guides/ObjectHighlightGuidePrefab';
@@ -10,16 +10,12 @@ import ObjectHighlightGuide from './guides/ObjectHighlightGuidePrefab';
 let SPRITEKEY = 'bootyPrefab';
 let IMAGEPATH = 'images/tests/green_rectangle.png';
 
-let hasPreloaded = false;
-let _types = [];
-let _entities = {};
-
 class BootyPrefab extends ConfigPrefab {
 	constructor(game, x=0, y=0, xVelocity=0, yVelocity=0) {
 
 		// get random type
-		var typeKey         = BootyPrefab.types[MGU.random(BootyPrefab.types.length-1)];
-		var config          = BootyPrefab.entities[typeKey];
+		var typeKey         = game.gameModel.booty.types[MGU.random(game.gameModel.booty.types.length-1)];
+		var config          = game.gameModel.booty.entities[typeKey];
 
 		// call ConfigPrefab class
 		super(game, config, x, y);
@@ -27,8 +23,8 @@ class BootyPrefab extends ConfigPrefab {
 		// PLAY IDLE ANIMATION
 		this.animations.play('idle');
 
-		this.useTrajectoryGuide = false;
-		this.useObjectHighlight = false;
+		this.useTrajectoryGuide = GameConfig.debug.booty.usePathGuides;
+		this.useObjectHighlight = GameConfig.debug.booty.useHighlightGuides;
 
 		// load config from type
 		this.type     = typeKey;
@@ -62,33 +58,7 @@ class BootyPrefab extends ConfigPrefab {
 
 		this.spin();
 	}
-	static preload (game) {
-
-		if ( !hasPreloaded ) {
-			hasPreloaded = true;
-			BootyPrefab.preloadAssets(game);
-		}
-
-	}
-
-	static get types() { return _types; }
-	static get entities() { return _entities; }
-
-	static preloadAssets(game) {
-		// go through the SS config file
-		for ( let sheetKey of Object.keys(SSConfig) ) {
-
-			// install the spritesheet
-			var entities = GameFuncs.installSpritesheetFromConfig(game, sheetKey, SSConfig[sheetKey]);
-
-			MGU.merge(BootyPrefab.entities, entities);
-			Array.prototype.push.apply(BootyPrefab.types, Object.keys(entities));
-
-		}
-
-		console.log('Booty Types', BootyPrefab.types);
-		console.log('Booty Entities', BootyPrefab.entities);
-	}
+	static preload () {}
 
 	defineGeometry() {
 		/**
@@ -99,8 +69,11 @@ class BootyPrefab extends ConfigPrefab {
 
 		//this.scale.setTo(0.05,0.05);
 
-		this.width = this.config.size.width;
-		this.height = this.config.size.height;
+		//this.width = this.config.size.width;
+		//this.height = this.config.size.height;
+
+		this.scale.setTo(this.config.scale, this.config.scale);
+
 	}
 	definePhysics() {
 		/**

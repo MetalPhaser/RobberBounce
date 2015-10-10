@@ -1,0 +1,44 @@
+{"frames": {
+
+"ss2-baby":
+{
+	"frame": {"x":204,"y":405,"w":185,"h":181},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":8,"w":185,"h":181},
+	"sourceSize": {"w":200,"h":196}
+},
+"ss2-clock":
+{
+	"frame": {"x":2,"y":2,"w":200,"h":569},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":569},
+	"sourceSize": {"w":200,"h":569}
+},
+"ss2-dog":
+{
+	"frame": {"x":204,"y":241,"w":188,"h":162},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":5,"w":188,"h":162},
+	"sourceSize": {"w":200,"h":172}
+},
+"ss2-money":
+{
+	"frame": {"x":204,"y":2,"w":200,"h":237},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":237},
+	"sourceSize": {"w":200,"h":237}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "ss2-ss.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:6209156ea9fc8f3f9a589e9a8b0cbae2:c8f574b4b52cfea4b379e7bb61282f23:cb5e5ecba6901c558e776f81646f711a$"
+}
+}

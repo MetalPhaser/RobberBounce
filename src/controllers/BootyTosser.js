@@ -33,7 +33,8 @@ class BootyTosser {
 		let xPosition               = this.game.world.width - 1;
 
 		// window
-		let yPosition               = MGU.random(booty.height, this.game.world.height - (booty.height * 10));
+		let bootyH                  = booty.height * booty.scale.x;
+		let yPosition               = MGU.random(bootyH + 50, this.game.world.height - (bootyH * 10));
 
 		// height
 		let height                  = this.game.world.height - yPosition;

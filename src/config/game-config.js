@@ -11,5 +11,11 @@ export default {
 	},
 	controls : {
 		cursorKeyRepeatMills : 200
+	},
+	debug : {
+		booty : {
+			usePathGuides : true,
+			useHighlightGuides : false
+		}
 	}
 }
